@@ -1,33 +1,31 @@
-from fastapi import FastAPI
+from fastapi import APIRouter
 
 from app.config import Settings
-from app.enums import Test
-from model.transformer import get_model, Transformer
-
-app = FastAPI()
 
 
-@app.get('/health')
+api_router = APIRouter()
+
+
+@api_router.get('/health')
 def health():
     s = Settings()
     return {'version': s.version, 'status': 'running', 'model': s.model_version}
 
-@app.get("/")
+
+@api_router.get("/")
 async def root():
+
     return {"message": "Hello world!"}
 
 
-@app.get("/generate")
+@api_router.get("/generate")
 async def generate_message():
-    m: Transformer = get_model()
-    message: str = m.generate()
+
+    message: str = ""
     return {'message': message}
 
 
-@app.get("/generate/{input}")
+@api_router.get("/generate/{input}")
 async def items(input: str):
     reply = input + ""
     return {"item_id": reply}
-
-
-
